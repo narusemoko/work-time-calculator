@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>勤務時間計算</title>
+
+    <style>
+        body {
+    font-family: sans-serif;
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+h1 {
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+       input {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    height: 48px;
+    box-sizing: border-box;
+    font-size: 18px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+        button {
+    font-size: 20px;
+    padding: 12px 30px;
+    margin-top: 15px;
+    margin-right: 10px;
+}
+
+       #result {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 25px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    min-height: 30px;
+}
+   p {
+    margin-bottom: 5px;
+}
+
+.break-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+ </style>
+</head>
+
+<body>
+
+    <h1>勤務時間計算</h1>
+
+    <p>出勤時間</p>
+    <input type="time">
+
+    <p>退勤時間</p>
+    <input type="time">
+
+    <p>休憩時間</p>
+
+<div class="break-input">
+    <input type="number" min="0" step="15" placeholder="例：60">
+    <span>分</span>
+</div>
+
+    <button id="calculate">計算</button>
+<button id="reset">リセット</button>
+
+    <p id="result"></p>
+
+    <script>
+        const inputs = document.querySelectorAll('input');
+        const button = document.querySelector('button');
+        const result = document.getElementById('result');
+        const resetButton = document.getElementById('reset');
+
+        button.addEventListener('click', function() {
+    const start = inputs[0].value;
+    const end = inputs[1].value;
+    const breakTime = Number(inputs[2].value);
+
+    if (start === '' || end === '') {
+        result.textContent = '出勤時間と退勤時間を入力してください';
+        return;
+    }
+
+    const startMinutes =
+        Number(start.split(':')[0]) * 60 +
+        Number(start.split(':')[1]);
+
+    const endMinutes =
+        Number(end.split(':')[0]) * 60 +
+        Number(end.split(':')[1]);
+
+    let workMinutes = endMinutes - startMinutes - breakTime;
+
+if (workMinutes < 0) {
+    workMinutes += 24 * 60;
+}
+
+    const hours = Math.floor(workMinutes / 60);
+    const minutes = workMinutes % 60;
+
+    result.textContent =
+    '実働時間：' + hours + '時間' + minutes + '分';
+});
+
+resetButton.addEventListener('click', function() {
+    inputs[0].value = '';
+    inputs[1].value = '';
+    inputs[2].value = '';
+    result.textContent = '';
+});
+    </script>
+
+</body>
+</html>
